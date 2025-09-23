@@ -1,22 +1,17 @@
-import pandas as pd
-import glob
 import os
+import pandas as pd
 
-data_folder = "data"
+# Define the data folder path
+data_path = os.path.join(os.path.dirname(__file__), "data")
 
-facebook = pd.read_csv(os.path.join(data, "Facebook.csv"))
-twitter = pd.read_csv(os.path.join(data, "Twitter.csv"))
-instagram = pd.read_csv(os.path.join(data, "Instagram.csv"))
-tiktok = pd.read_csv(os.path.join(data, "Tiktok.csv"))
-
-# List all CSV files for social media platforms
-csv_files = ["Facebook.csv", "Instagram.csv", "Twitter.csv", "Tiktok.csv"]
+# List all CSV files inside data folder
+csv_files = [f for f in os.listdir(data_path) if f.endswith(".csv")]
 
 # Initialize empty list to store individual DataFrames
 df_list = []
 
 for file in csv_files:
-    file_path = os.path.join(folder_path, file)
+    file_path = os.path.join(data_path, file)
     
     # Load CSV
     df = pd.read_csv(file_path)
@@ -24,8 +19,9 @@ for file in csv_files:
     # Add a 'platform' column based on filename
     df['platform'] = file.split('.')[0]  # e.g., 'Facebook', 'Instagram'
     
-    # Convert 'date_created' to datetime
-    df['date_created'] = pd.to_datetime(df['date_created'], errors='coerce')
+    # Convert 'date_created' to datetime if the column exists
+    if 'date_created' in df.columns:
+        df['date_created'] = pd.to_datetime(df['date_created'], errors='coerce')
     
     # Append to list
     df_list.append(df)
@@ -34,5 +30,6 @@ for file in csv_files:
 social_df = pd.concat(df_list, ignore_index=True)
 
 # Optional: check the merged dataframe
-print(social_df.head())
-print(social_df.info())
+if __name__ == "__main__":
+    print(social_df.head())
+    print(social_df.info())
