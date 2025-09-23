@@ -59,48 +59,6 @@ filtered_df = social_df[
     (social_df["platform"].isin(platforms)) &
     (social_df["subtype"].isin(post_types)) &
     (social_df["date_created"].dt.date.between(start, end))
-].copy()# -------------------------------
-# Sidebar Filters
-# -------------------------------
-st.sidebar.header("Filters")
-
-# Platform filter
-platforms = st.sidebar.multiselect(
-    "Select Platform(s):",
-    options=social_df["platform"].unique(),
-    default=social_df["platform"].unique()
-)
-
-# Handle date range
-if not social_df.empty:
-    start_date = social_df["date_created"].min().date()
-    end_date = social_df["date_created"].max().date()
-else:
-    start_date = end_date = pd.Timestamp.today().date()
-
-date_range = st.sidebar.date_input("Select Date Range:", [start_date, end_date])
-if isinstance(date_range, list) and len(date_range) == 2:
-    start, end = date_range
-else:
-    start = end = date_range
-
-# Ensure critical columns exist
-for col in ["num_likes", "num_replies", "subtype"]:
-    if col not in social_df.columns:
-        social_df[col] = 0 if col != "subtype" else "Unknown"
-
-# Post type filter
-post_types = st.sidebar.multiselect(
-    "Select Post Type(s):",
-    options=social_df["subtype"].unique(),
-    default=social_df["subtype"].unique()
-)
-
-# Apply filters
-filtered_df = social_df[
-    (social_df["platform"].isin(platforms)) &
-    (social_df["subtype"].isin(post_types)) &
-    (social_df["date_created"].dt.date.between(start, end))
 ].copy()
 
 # -------------------------------
