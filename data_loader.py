@@ -12,10 +12,6 @@ import pandas as pd
 # Or directly from GitHub (for testing)
 csv_urls = [
     "https://raw.githubusercontent.com/EcomCloud/social_media_dashboard/refs/heads/main/data/Facebook-datasets.csv"
-    "https://raw.githubusercontent.com/EcomCloud/social_media_dashboard/refs/heads/main/data/Instagram-datasets.csv"
-    "https://raw.githubusercontent.com/EcomCloud/social_media_dashboard/refs/heads/main/data/Tiktok-datasets.csv"
-    "https://raw.githubusercontent.com/EcomCloud/social_media_dashboard/refs/heads/main/data/Twitter-datasets.csv"
-    
     # Add more URLs here for Instagram, Twitter, TikTok if needed
 ]
 
