@@ -9,56 +9,6 @@ from data_loader import social_df  # Your merged DataFrame from data_loader.py
 st.set_page_config(page_title="Social Media Dashboard", layout="wide")
 st.title("📊 Social Media Dashboard")
 st.markdown("Insights across Facebook, Instagram, Twitter, and TikTok")
-import streamlit as st
-from data_loader import social_df
-
-# Page setup
-st.set_page_config(page_title="📊 Social Media Dashboard", layout="wide")
-
-st.title("📊 Social Media Dashboard")
-
-# Check if data loaded
-if social_df.empty:
-    st.warning("⚠️ No data loaded. Please check your CSV files inside the `data/` folder.")
-else:
-    st.success(f"✅ Data loaded successfully with {len(social_df)} records.")
-
-    # Date filter (only if 'date_created' exists)
-    if 'date_created' in social_df.columns:
-        min_date = social_df['date_created'].min()
-        max_date = social_df['date_created'].max()
-
-        if pd.notna(min_date) and pd.notna(max_date):
-            date_range = st.sidebar.date_input(
-                "📅 Select Date Range:",
-                [min_date.date(), max_date.date()]
-            )
-
-            if len(date_range) == 2:
-                start_date, end_date = date_range
-                mask = (social_df['date_created'] >= pd.to_datetime(start_date)) & \
-                       (social_df['date_created'] <= pd.to_datetime(end_date))
-                filtered_df = social_df.loc[mask]
-            else:
-                filtered_df = social_df
-        else:
-            filtered_df = social_df
-    else:
-        filtered_df = social_df
-
-    # Data preview
-    st.subheader("📋 Data Preview")
-    st.dataframe(filtered_df.head(20))  # Show first 20 rows
-
-    # Quick stats
-    st.subheader("📈 Quick Stats")
-    st.write(filtered_df.describe(include="all"))
-
-    # Platform counts
-    if 'platform' in filtered_df.columns:
-        st.subheader("📊 Records by Platform")
-        st.bar_chart(filtered_df['platform'].value_counts())
-
 
 # -------------------------------
 # Preprocess Data
