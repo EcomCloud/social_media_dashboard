@@ -1,34 +1,35 @@
 import os
 import pandas as pd
 
-# Path to the 'data' folder
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+# Define the data folder path
+data_path = os.path.join(os.path.dirname(__file__), "data")
 
-def load_csv(filename):
-    """Load a CSV safely. If not found, return empty DataFrame."""
-    filepath = os.path.join(DATA_DIR, filename)
-    if os.path.exists(filepath):
-        try:
-            df = pd.read_csv(filepath)
-            df['platform'] = filename.split('.')[0]  # Add platform column
-            # Try to parse date column if exists
-            if 'date_created' in df.columns:
-                df['date_created'] = pd.to_datetime(df['date_created'], errors='coerce')
-            return df
-        except Exception as e:
-            print(f"⚠️ Error loading {filename}: {e}")
-            return pd.DataFrame()
-    else:
-        print(f"⚠️ File not found: {filename}")
-        return pd.DataFrame()
+# List all CSV files inside data folder
+csv_files = [f for f in os.listdir(data_path) if f.endswith(".csv")]
 
-# Load datasets
-facebook = load_csv("Facebook.csv")
-instagram = load_csv("Instagram.csv")
-twitter = load_csv("Twitter.csv")
+# Initialize empty list to store individual DataFrames
+df_list = []
 
-# Merge into one dataframe
-if not facebook.empty or not instagram.empty or not twitter.empty:
-    social_df = pd.concat([facebook, instagram, twitter], ignore_index=True)
-else:
-    social_df = pd.DataFrame()  # if all missing
+for file in csv_files:
+    file_path = os.path.join(data_path, file)
+    
+    # Load CSV
+    df = pd.read_csv(file_path)
+    
+    # Add a 'platform' column based on filename
+    df['platform'] = file.split('.')[0]  # e.g., 'Facebook', 'Instagram'
+    
+    # Convert 'date_created' to datetime if the column exists
+    if 'date_created' in df.columns:
+        df['date_created'] = pd.to_datetime(df['date_created'], errors='coerce')
+    
+    # Append to list
+    df_list.append(df)
+
+# Merge all dataframes into a single DataFrame
+social_df = pd.concat(df_list, ignore_index=True)
+
+# Optional: check the merged dataframe
+if __name__ == "__main__":
+    print(social_df.head())
+    print(social_df.info())
